@@ -1,5 +1,24 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
+ 
 <meta charset="utf-8">
+
+<!--Rounded switch -->
+<label class="switch">
+  <input type="checkbox" onclick="changeColor()">
+  <div class="slider round"></div>
+</label>
+
+<label class="switch2">
+  <input type="checkbox" onclick="changeBoundaries()"> 
+  <div class="slider round"></div>
+</label>
+
+<label class="switch3">
+  <input type="checkbox" onclick="changeStateBound()"> 
+  <div class="slider round"></div>
+</label>
+
+
 <style>
 svg {
   font: 10px sans-serif;
@@ -19,29 +38,121 @@ svg {
   stroke: #000;
   stroke-opacity: .3;
 }
+.tract-border {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .3;
+}
+.state-border {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: 0.5;
+}     
+h1 {
+    font:sans-serif;
+}
+    
+body {
+  font: 13px sans-serif;
+}
+    
+
+    
+.switch { 
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  top: 100px;
+  left: 100px;
+  right: 100px;
+  bottom: 100px;
+}
+    
+.switch2 {
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  top: 150px;
+  left: 100px;
+  right: 100px;
+  bottom: 100px;
+}
+    
+.switch3 {
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  top: 200px;
+  left: 100px;
+  right: 100px;
+  bottom: 100px;
+}    
+    
+    
+    
+    
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .01s;
+  transition: .01s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .01s;
+  transition: .01s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+    
+    
+/****************************/   
+    
 </style>
 <body>
-    <h2> Mississippi Population Density, 2016 </h2>
-    
-     <!--Toggle color button-->
-    <input class="color" type="button" name="color_change" value="Toggle Color">
-    
-    <!--Toggle show boundaries button-->
-    <input class="boundary" type="button" name="boundary_change" value="Toggle Boundary">
-    
-    <input class="tract" type="button" name="tract_change" value="Toggle Tract">
-    
+<h1 style = "text-align:center; color:black; font:sans-serif"><bold> Mississippi Population Density, 2016 </bold></h1>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script>
-//Toggle color and boundary variables
-var changeColor = false;
-var showBoundary = true;
-var showTract = true;    
     
-var width = 1000,
+    
+    
+var width = 960,
     height = 1100;
-var formatNumber = d3.format(",d");
+var formatNumber = d3.format(",d"); 
     
 var projection = d3.geo.albers()
     .center([-83.38, 38.5])
@@ -49,132 +160,168 @@ var projection = d3.geo.albers()
     .parallels([25, 15])
     .scale(10000)
     .translate([width / 2, height / 2]);
-  
+    
 var path = d3.geo.path()
-    .projection(projection);
-var color = d3.scale.threshold()
+    .projection(projection); 
+                             
+var color = d3.scale.threshold() 
+                                
     .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
     .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
+var switchOne = false; //boolean #1 for checking switch press
     
-    d3.select("input.color").on("click", toggleColor);
-    d3.select("input.boundary").on("click", toggleBoundary);
-    d3.select("input.tract").on("click", toggleTract);
+function changeColor() {
+    switchOne = !switchOne; 
     
-//Toggle color range between Red and Green
-  function toggleColor() {
-  
-    changeColor = !changeColor;
-      
-    if(changeColor){  
-    color = d3.scale.threshold()
-    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
-    .range(['#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#006837','#004529']);
+    //change red to green
+    if (switchOne) {
+        color = d3.scale.threshold()
+        .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
+        .range(['#ffffe5','#f7fcb9','#d9f0a3','#addd8e','#78c679','#41ab5d','#238443','#006837','#004529']);
+        console.log("goes in");
+        //console.log(color.domain());
     }
-      else {
-    color = d3.scale.threshold()
-    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
-    .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]); 
-      }
-  refresh(); //refresh map    
-  }
-   
-//Toggle showBoundary boolean true or false
-function toggleBoundary(){
-    showBoundary = !showBoundary;
-    refresh(); //refresh map
+    
+    else {
+        color = d3.scale.threshold()
+        .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
+        .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
+    }
+    redraw();
 }
     
-    function toggleTract(){
-    showTract = !showTract;
-    refresh(); //refresh map
-    }
-        
-// A position encoding for the key only.
-var x = d3.scale.linear()
-    .domain([0, 5000])
-    .range([0, 480]);
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickSize(13)
-    .tickValues(color.domain())
-    .tickFormat(function(d) { return d >= 100 ? formatNumber(d) : null; });
+var switchTwo = false;
+    
+function changeBoundaries() {
+    switchTwo = !switchTwo;
+    redraw();
+}
+    
+var switchThree = false;
+    
+function changeStateBound(){
+    switchThree = !switchThree;
+    redraw();
+}
+    
+    
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-refresh(); //refresh map
-  
-//Refresh Geomap function    
-function refresh() {
-var g = svg.append("g")
-    .attr("class", "key")
-    .attr("transform", "translate(440,40)");
+redraw();
     
-g.selectAll("rect")
-    .data(color.range().map(function(d, i) {
-      return {
-        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
-        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
-        z: d
-      };
-    }))
-  .enter().append("rect")
-    .attr("height", 8)
-    .attr("x", function(d) { return d.x0; })
-    .attr("width", function(d) { return d.x1 - d.x0; })
-    .style("fill", function(d) { return d.z; });
-g.call(xAxis).append("text")
-    .attr("class", "caption")
-    .attr("y", -6)
-    .text("Population per square mile");
+function redraw() { 
+                    
     
-d3.json("ms.json", function(error, ms) {
-  if (error) throw error;
-  var tracts = topojson.feature(ms, ms.objects.cb_2015_28_tract_500k);
-  // Clip tracts to land.
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip-land")
-    .append("path")
-      .datum(topojson.feature(ms, ms.objects.county))
-      .attr("d", path);
+    var g = svg.append("g") 
+        .attr("class", "key")
+        .attr("transform", "translate(440,40)");
+    // A position encoding for the key only.
+    var x = d3.scale.linear()
+        .domain([0, 5100])
+        .range([0, 480]);
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .tickSize(13)
+        .tickValues(color.domain())
+        .tickFormat(function(d) { return d >= 100 ? formatNumber(d) : null; });
+    g.selectAll("rect")
+        .data(color.range().map(function(d, i) {
+            console.log(x.range());
+          return {
+            x0: i ? x(color.domain()[i - 1]) : x.range()[0],
+            x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 8)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+        console.log('goes into rect');
     
-  // Group tracts by color for faster rendering.
-  svg.append("g")
-      .attr("class", "tract")
-      .attr("clip-path", "url(#clip-land)")
-    .selectAll("path")
-      .data(d3.nest()
-        .key(function(d) { return color(d.properties.population / d.properties.area * 2.58999e6); })
-        .entries(tracts.features.filter(function(d) { return d.properties.area; })))
-    .enter().append("path")
-      .style("fill", function(d) { return d.key; })
-      .attr("d", function(d) { return path({type: "FeatureCollection", features: d.values}); });
+    //Legend Label
+    g.call(xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", -6)
+        .text("Population per square mile");
     
-  // Draw county borders.
-  //Toggle show boundary
-  if(showBoundary){
-    svg.append("path")
-      .datum(topojson.mesh(ms, ms.objects.county, function(a, b) { return a !== b; }))
-      .attr("class", "county-border")
-      .attr("d", path);
-  }
+    g.call(xAxis).append("text")      
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+        .attr("x",-280)
+        .attr("y", 15)
+        .text("Change Colors");
+    g.call(xAxis).append("text")
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+        .attr("x",-280)
+        .attr("y", 65)
+        .text("Tract Boundaries");
     
-    if(showTract){
-    svg.append("path")
-      .datum(topojson.mesh(ms, ms.objects.cb_2015_28_tract_500k, function(a, b) { return a !== b; }))
-      .attr("class", "county-border")
-      .attr("d", path);
-  }
-});
+    g.call(xAxis).append("text")
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+        .attr("x",-280)
+        .attr("y", 120)
+        .text("State Boundaries");
     
+    d3.json("ms.json", function(error, ms) {
+      if (error) throw error;
+      var tracts = topojson.feature(ms, ms.objects.cb_2015_28_tract_500k);
+        
+      // Clip tracts to land.
+      svg.append("defs").append("clipPath")
+          .attr("id", "clip-land")
+        .append("path")
+          .datum(topojson.feature(ms, ms.objects.county))
+          .attr("d", path);
+        
+      // Group tracts by color for faster rendering.
+      svg.append("g")
+          .attr("class", "tract")
+          .attr("clip-path", "url(#clip-land)")
+        .selectAll("path")
+          .data(d3.nest()   
+            .key(function(d) { return color(d.properties.population / d.properties.area * 2.58999e6); })
+            .entries(tracts.features.filter(function(d) { return d.properties.area; })))
+        .enter().append("path")
+          .style("fill", function(d) { return d.key; })
+          .attr("d", function(d) { return path({type: "FeatureCollection", features: d.values}); });
+        
+      // Draw county borders.
+      svg.append("path")
+          .datum(topojson.mesh(ms, ms.objects.county, function(a, b) { return a !== b; })) 
+          .attr("class", "county-border")
+          .attr("d", path);
+        
+    if (switchTwo) {
+        svg.append("path")
+              .datum(topojson.mesh(ms, ms.objects.cb_2015_28_tract_500k, function(a, b) { return a !== b; }))
+              .attr("class", "tract-border")
+              .attr("d", path);
     }
-d3.select(self.frameElement).style("height", height + "px");
-</script>
     
+    if (switchThree) {
+        svg.append("path")
+              .datum(topojson.mesh(ms, ms.objects.cb_2015_28_tract_500k, function(a, b) { return a === b; }))//!==
+              .attr("class", "state-border")
+              .attr("d", path);
+    }    
+        
+            
+    });    
+}  
+       
+d3.select(self.frameElement).style("height", height + "px");
+  
+</script>
 <h3>Miriam Ali <br/>
 Instructor: Suresh Lodha <br/>
 CMPS 165: Data programming for Visualization <br/>
-Fall 2016 <br/> 
-<a href="http://127.0.0.1:57338/msPopDensity.html">Weblink for Visualization</a> <br/>
+Fall 2016 <br/>    
+<a href="http://127.0.0.1:64278/index.html">Weblink for Visualization</a> <br/>
 <a href="https://github.com/MiriamAli/RegionalPopulation">Weblink for Github</a>     
-</h3> 
+</h3>  
